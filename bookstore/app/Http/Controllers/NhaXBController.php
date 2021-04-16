@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\Nha_Xuat_Ban;
-
+use App\Models\Sach;
 
 class NhaXBController extends Controller
 {
@@ -113,7 +113,16 @@ class NhaXBController extends Controller
     public function destroy($id)
     {
         $nxb = Nha_Xuat_Ban::find($id);
-        $nxb->delete();
-        return redirect('admin/ds-nxb')->with('alert', 'Xoá thành công');
+       
+        if(  Sach::where('id_nha_xuat_ban', '=', "$id")->get())
+            {
+              
+                return redirect('admin/ds-nxb')->with('alert', 'Xoá không thành công vì bên sách có id nxb');
+            }
+       if( Sach::where('id_nha_xuat_ban', '!=', "$id")->get())
+            {
+                $nxb->delete();
+                 return redirect('admin/ds-nxb')->with('alert', 'Xoá thành công');
+            }
     }
 }
